@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://wheelzinmotion-platform.vercel.app"),
+metadataBase: new URL("https://wheelzinmotion.xyz"),
 
   title: {
     default: "WheelzInMotion | Technology Built to Move You Forward",
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     title: "WheelzInMotion",
     description:
       "Custom PC builds, repairs, websites, mobile apps, and technology solutions.",
-    url: "https://wheelzinmotion-platform.vercel.app",
+    url: "https://wheelzinmotion.xyz",
     siteName: "WheelzInMotion",
     type: "website",
     locale: "en_US",
