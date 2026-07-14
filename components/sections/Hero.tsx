@@ -29,12 +29,7 @@ export default function Hero() {
     View Services
   </a>
 
-  <a
-    href="/contact"
-    className="rounded-full border border-purple-500 px-10 py-4 font-bold text-purple-300 transition hover:bg-purple-900/30"
-  >
-    Contact Us
-  </a>
+ 
 </div>
       </motion.div>
     </section>
