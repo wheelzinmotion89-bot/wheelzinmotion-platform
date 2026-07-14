@@ -1,8 +1,10 @@
 "use client";
 
 import Navbar from "@/components/layout/Navbar";
-import { useState } from "react";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
+import { CheckCircle2 } from "lucide-react";
+import { useState } from "react";
+
 const computerUses = [
   "Gaming",
   "Streaming",
@@ -28,16 +30,20 @@ const budgets = [
 export default function PCBuilderPage() {
   const [status, setStatus] = useState("");
   const [isSending, setIsSending] = useState(false);
+  const [wasSuccessful, setWasSuccessful] = useState(false);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (isSending) return;
+    if (isSending) {
+      return;
+    }
 
     const form = event.currentTarget;
     const formData = new FormData(form);
 
     setIsSending(true);
+    setWasSuccessful(false);
     setStatus("Sending your custom PC request...");
 
     try {
@@ -49,12 +55,19 @@ export default function PCBuilderPage() {
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.error || "Unable to submit your request.");
+        throw new Error(
+          result.error || "Unable to submit your custom PC request.",
+        );
       }
 
-      setStatus("Your custom PC request was sent successfully!");
+      setWasSuccessful(true);
+      setStatus(
+        "Build request sent successfully. WheelzInMotion will review your selections and reply by email.",
+      );
+
       form.reset();
     } catch (error) {
+      setWasSuccessful(false);
       setStatus(
         error instanceof Error
           ? error.message
@@ -235,45 +248,26 @@ export default function PCBuilderPage() {
               </h2>
 
               <div className="mt-6 grid gap-4 md:grid-cols-2">
-                <label className="flex items-center gap-3 rounded-xl border border-purple-500/30 bg-black p-4">
-                  <input
-                    type="checkbox"
-                    name="features"
-                    value="Wi-Fi and Bluetooth"
-                    className="h-5 w-5 accent-purple-600"
-                  />
-                  Wi-Fi and Bluetooth
-                </label>
+                {[
+                  "Wi-Fi and Bluetooth",
+                  "RGB Lighting",
+                  "Liquid Cooling",
+                  "Accessibility Setup",
+                ].map((feature) => (
+                  <label
+                    key={feature}
+                    className="flex items-center gap-3 rounded-xl border border-purple-500/30 bg-black p-4"
+                  >
+                    <input
+                      type="checkbox"
+                      name="features"
+                      value={feature}
+                      className="h-5 w-5 accent-purple-600"
+                    />
 
-                <label className="flex items-center gap-3 rounded-xl border border-purple-500/30 bg-black p-4">
-                  <input
-                    type="checkbox"
-                    name="features"
-                    value="RGB Lighting"
-                    className="h-5 w-5 accent-purple-600"
-                  />
-                  RGB Lighting
-                </label>
-
-                <label className="flex items-center gap-3 rounded-xl border border-purple-500/30 bg-black p-4">
-                  <input
-                    type="checkbox"
-                    name="features"
-                    value="Liquid Cooling"
-                    className="h-5 w-5 accent-purple-600"
-                  />
-                  Liquid Cooling
-                </label>
-
-                <label className="flex items-center gap-3 rounded-xl border border-purple-500/30 bg-black p-4">
-                  <input
-                    type="checkbox"
-                    name="features"
-                    value="Accessibility Setup"
-                    className="h-5 w-5 accent-purple-600"
-                  />
-                  Accessibility Setup
-                </label>
+                    {feature}
+                  </label>
+                ))}
               </div>
             </div>
 
@@ -284,25 +278,33 @@ export default function PCBuilderPage() {
               className="w-full resize-y rounded-xl border border-purple-500/30 bg-black p-4 outline-none transition focus:border-purple-400"
             />
 
-          <button
-  type="submit"
-  disabled={isSending}
-  className="w-full rounded-full bg-purple-600 py-4 text-lg font-bold transition hover:bg-purple-500 hover:shadow-[0_0_30px_rgba(147,51,234,.65)] disabled:cursor-not-allowed disabled:opacity-60"
->
-  {isSending ? (
-    <LoadingSpinner label="Sending Build Request..." />
-  ) : (
-    "Submit Build Request"
-  )}
-</button>
+            <button
+              type="submit"
+              disabled={isSending}
+              className="w-full rounded-full bg-purple-600 py-4 text-lg font-bold transition hover:bg-purple-500 hover:shadow-[0_0_30px_rgba(147,51,234,.65)] disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {isSending ? (
+                <LoadingSpinner label="Sending Build Request..." />
+              ) : (
+                "Submit Build Request"
+              )}
+            </button>
 
             {status && (
-              <p
+              <div
                 aria-live="polite"
-                className="text-center font-semibold text-purple-300"
+                className={`rounded-2xl border p-5 text-center ${
+                  wasSuccessful
+                    ? "border-green-500/30 bg-green-500/10 text-green-300"
+                    : "border-red-500/30 bg-red-500/10 text-red-300"
+                }`}
               >
-                {status}
-              </p>
+                {wasSuccessful && (
+                  <CheckCircle2 className="mx-auto mb-3" size={32} />
+                )}
+
+                <p className="font-semibold">{status}</p>
+              </div>
             )}
           </form>
         </section>
