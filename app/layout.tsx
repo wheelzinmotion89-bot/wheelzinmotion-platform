@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/next";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -13,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-metadataBase: new URL("https://wheelzinmotion.xyz"),
+  metadataBase: new URL("https://wheelzinmotion.xyz"),
 
   title: {
     default: "WheelzInMotion | Technology Built to Move You Forward",
@@ -79,6 +80,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
+        <Analytics />
       </body>
     </html>
   );
